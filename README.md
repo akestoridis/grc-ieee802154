@@ -36,6 +36,7 @@ $ sudo apt install git
 
 * Install the dependencies of UHD:
 ```
+$ sudo apt update
 $ sudo apt install build-essential cmake doxygen libboost-all-dev libusb-1.0-0-dev python-docutils python-mako python-requests python-six
 ```
 
@@ -262,7 +263,7 @@ $ python3
 
 * Terminate the execution of the flow graph and then do the following:
 	* The generated `/tmp/sensor.pcap` file should contain a packet with "Hello World!" in its payload after executing the above commands.
-	* An independent 802.15.4 sniffer should have also been able to capture the packet after tuning to the appropriate channel.
+	* An independent IEEE 802.15.4 sniffer should have also been able to capture the packet after tuning to the appropriate channel.
 
 * Disconnect from the USRP and restore the connection profile.
 
@@ -277,7 +278,7 @@ $ sudo pip3 install scapy
 	* Disable the `RIME Stack` block.
 	* Disable the `IEEE802.15.4 MAC` block.
 	* Connect `Socket PDU` to `IEEE802.15.4 OQPSK PHY`.
-	* Try to transmit an 802.15.4 packet using Scapy (v2.4.2+) by generating and executing the flow graph, followed by the following commands:
+	* Try to transmit an IEEE 802.15.4 packet using Scapy (v2.4.2+) by generating and executing the flow graph, followed by the following commands:
 ```
 $ python3
 >>> import socket
@@ -289,7 +290,7 @@ $ python3
 ```
 
 * Terminate the execution of the flow graph and then do the following:
-	* An independent 802.15.4 sniffer should have been able to capture the packet after tuning to the appropriate channel.
+	* An independent IEEE 802.15.4 sniffer should have been able to capture the packet after tuning to the appropriate channel.
 	* Try to transmit a Zigbee packet using Scapy (v2.4.2+) by generating and executing the flow graph, followed by the following commands:
 ```
 $ python3
@@ -302,10 +303,17 @@ $ python3
 ```
 
 * Terminate the execution of the flow graph and then do the following:
-	* An independent Zigbee sniffer should have been able to capture the packet after tuning to the appropriate channel.
-	* To turn the flow graph into a simple 802.15.4 sniffer, enable the `UHD: USRP Source` and disable the `Packet Pad` and `Socket PDU` blocks.
+	* An independent IEEE 802.15.4 sniffer should have been able to capture the packet after tuning to the appropriate channel.
+	* To turn the flow graph into a simple IEEE 802.15.4 sniffer, enable the `UHD: USRP Source` and disable the `Packet Pad` and `Socket PDU` blocks.
 
 * If you were able to follow these instructions without any errors, then you should be able to generate and execute the flow graphs of this repository.
+
+
+## Publication
+
+These GRC flow graphs were used in the following publication:
+
+* D.-G. Akestoridis, M. Harishankar, M. Weber, and P. Tague, "Zigator: Analyzing the security of Zigbee-enabled smart homes," 2020, to appear in the Proceedings of the 13th ACM Conference on Security and Privacy in Wireless and Mobile Networks (WiSec).
 
 
 ## License
