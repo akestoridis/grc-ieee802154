@@ -16,32 +16,32 @@ The following GRC flow graphs were developed on [Debian 10.3](https://cdimage.de
 
 ## Instructions
 
-* The following set of instructions was compiled using information from the following sources:
-	* <https://files.ettus.com/manual/page_build_guide.html>
-	* <https://kb.ettus.com/Building_and_Installing_the_USRP_Open-Source_Toolchain_(UHD_and_GNU_Radio)_on_Linux>
-	* <https://files.ettus.com/manual/page_usrp2.html>
-	* <https://files.ettus.com/manual/page_calibration.html>
-	* <https://www.gnuradio.org/doc/doxygen/build_guide.html>
-	* <https://wiki.gnuradio.org/index.php/InstallingGR>
-	* <https://wiki.gnuradio.org/index.php/GNURadioCompanion>
-	* <https://wiki.gnuradio.org/index.php/UbuntuInstall>
-	* <https://www.wime-project.net/installation/>
-	* <https://www.youtube.com/watch?v=V-oI7ss2zvs>
+The following set of instructions was compiled using information from the following sources:
+* <https://files.ettus.com/manual/page_build_guide.html>
+* <https://kb.ettus.com/Building_and_Installing_the_USRP_Open-Source_Toolchain_(UHD_and_GNU_Radio)_on_Linux>
+* <https://files.ettus.com/manual/page_usrp2.html>
+* <https://files.ettus.com/manual/page_calibration.html>
+* <https://www.gnuradio.org/doc/doxygen/build_guide.html>
+* <https://wiki.gnuradio.org/index.php/InstallingGR>
+* <https://wiki.gnuradio.org/index.php/GNURadioCompanion>
+* <https://wiki.gnuradio.org/index.php/UbuntuInstall>
+* <https://www.wime-project.net/installation/>
+* <https://www.youtube.com/watch?v=V-oI7ss2zvs>
 
-* Install Git in order to checkout the repositories:
-```
+Install Git in order to checkout the repositories:
+```console
 $ sudo apt update
 $ sudo apt install git
 ```
 
-* Install the dependencies of UHD:
-```
+Install the dependencies of UHD:
+```console
 $ sudo apt update
 $ sudo apt install build-essential cmake doxygen libboost-all-dev libusb-1.0-0-dev python-docutils python-mako python-requests python-six
 ```
 
-* Build and install UHD:
-```
+Build and install UHD:
+```console
 $ git clone https://github.com/EttusResearch/uhd.git
 $ cd uhd/
 $ git checkout v3.14.1.1
@@ -55,97 +55,97 @@ $ sudo make install
 $ cd ../../../
 ```
 
-* Add `libuhd.so` in the library path for dynamic linking by writing the following at the end of the `~/.bashrc` file:
-```
+Add `libuhd.so` in the library path for dynamic linking by writing the following at the end of the `~/.bashrc` file:
+```bash
 # libuhd.so
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 ```
 
-* Execute the content of the `~/.bashrc` file and update the list of shared libraries:
-```
+Execute the content of the `~/.bashrc` file and update the list of shared libraries:
+```console
 $ source ~/.bashrc
 $ sudo ldconfig
 ```
 
-* Test whether the `uhd_find_devices` command can be found or not:
-```
+Test whether the `uhd_find_devices` command can be found or not:
+```console
 $ uhd_find_devices
 ```
 
-* Create a group called `usrp` that includes the user:
-```
+Create a group called `usrp` that includes the user:
+```console
 $ sudo groupadd usrp
 $ sudo usermod -aG usrp $USER
 ```
 
-* To enable real-time scheduling, add the following line in the `/etc/security/limits.conf` file:
-```
+To enable real-time scheduling, add the following line in the `/etc/security/limits.conf` file:
+```text
 @usrp            -       rtprio          99
 ```
 
-* Reboot the computer:
-```
+Reboot the computer:
+```console
 $ sudo reboot
 ```
 
-* Download UHD FPGA images:
-```
+Download UHD FPGA images:
+```console
 $ sudo uhd_images_downloader
 ```
 
-* Create a connection profile for the Ethernet interface that will connect to the USRP with 192.168.10.1 as its static IP address and 255.255.255.0 as its netmask.
+Create a connection profile for the Ethernet interface that will connect to the USRP with 192.168.10.1 as its static IP address and 255.255.255.0 as its netmask.
 
-* Connect the USRP to the Ethernet interface and then execute the following commands to make sure that you can communicate with it:
-```
+Connect the USRP to the Ethernet interface and then execute the following commands to make sure that you can communicate with it:
+```console
 $ uhd_find_devices
 $ uhd_usrp_probe
 ```
 
-* If the `uhd_usrp_probe` command generated any configuration warnings, edit the `/etc/sysctl.conf` file accordingly, e.g.:
-```
+If the `uhd_usrp_probe` command generated any configuration warnings, edit the `/etc/sysctl.conf` file accordingly, e.g.:
+```text
 # USRP
 net.core.rmem_max=50000000
 net.core.wmem_max=2500000
 ```
 
-* If the `/etc/sysctl.config` file was edited, refresh the system configuration:
-```
+If the `/etc/sysctl.config` file was edited, refresh the system configuration:
+```console
 $ sudo sysctl -p
 ```
 
-* Load the appropriate image, by providing the type and IP address of the USRP, and then let it reboot, e.g.:
-```
+Load the appropriate image, by providing the type and IP address of the USRP, and then let it reboot, e.g.:
+```console
 $ uhd_image_loader --args="type=usrp2,addr=192.168.10.5,reset"
 ```
 
-* The USRP should be available shortly after it finishes its reboot process:
-```
+The USRP should be available shortly after it finishes its reboot process:
+```console
 $ uhd_find_devices
 $ uhd_usrp_probe
 ```
 
-* To minimize IQ imbalance and DC offset of your USRP, disconnect any external hardware from the RF antenna ports and execute the following commands to calibrate the daughterboard:
-```
+To minimize IQ imbalance and DC offset of your USRP, disconnect any external hardware from the RF antenna ports and execute the following commands to calibrate the daughterboard:
+```console
 $ uhd_cal_rx_iq_balance --verbose
 $ uhd_cal_tx_iq_balance --verbose
 $ uhd_cal_tx_dc_offset --verbose
 ```
 
-* Disconnect from the USRP and restore the connection profile.
+Disconnect from the USRP and restore the connection profile.
 
-* Reboot the computer:
-```
+Reboot the computer:
+```console
 $ sudo reboot
 ```
 
-* Install the dependencies of GNU Radio:
-```
+Install the dependencies of GNU Radio:
+```console
 $ sudo apt update
 $ sudo apt install cmake doxygen g++ git libboost-all-dev libcanberra-gtk-module libcomedi-dev libcppunit-dev libfftw3-dev libgsl-dev libqt4-opengl-dev libqwt-dev libsdl1.2-dev libusb-1.0-0-dev libzmq3-dev pkg-config python-sip-dev python-cheetah python-dev python-gtk2 python-lxml python-mako python-numpy python-qt4 python-sphinx python-wxgtk3.0 swig
 ```
 
-* Build and install GNU Radio:
-```
+Build and install GNU Radio:
+```console
 $ git clone --recursive https://github.com/gnuradio/gnuradio.git
 $ cd gnuradio/
 $ git checkout maint-3.7
@@ -160,30 +160,30 @@ $ sudo ldconfig
 $ cd ../../
 ```
 
-* Make sure that GNU Radio was successfully installed:
-```
+Make sure that GNU Radio was successfully installed:
+```console
 $ gnuradio-config-info --version
 $ gnuradio-config-info --prefix
 $ gnuradio-config-info --enabled-components
 ```
 
-* Test a simple GNU Radio flow graph that does not require any SDR:
-```
+Test a simple GNU Radio flow graph that does not require any SDR:
+```console
 $ python gnuradio/gr-audio/examples/python/dial_tone.py
 ```
 
-* Make sure that the GNU Radio Companion (GRC) tool was successfully installed:
-```
+Make sure that the GNU Radio Companion (GRC) tool was successfully installed:
+```console
 $ gnuradio-companion
 ```
 
-* Install the icons, mime type, and menu items bundled with GRC:
-```
+Install the icons, mime type, and menu items bundled with GRC:
+```console
 $ sudo /usr/local/libexec/gnuradio/grc_setup_freedesktop install
 ```
 
-* Build and install gr-foo:
-```
+Build and install gr-foo:
+```console
 $ git clone https://github.com/bastibl/gr-foo.git
 $ cd gr-foo/
 $ git checkout maint-3.7
@@ -196,8 +196,8 @@ $ sudo ldconfig
 $ cd ../../
 ```
 
-* Build and install gr-ieee802-15-4:
-```
+Build and install gr-ieee802-15-4:
+```console
 $ git clone https://github.com/bastibl/gr-ieee802-15-4.git
 $ cd gr-ieee802-15-4/
 $ git checkout maint-3.7
@@ -210,50 +210,49 @@ $ sudo ldconfig
 $ cd ../../
 ```
 
-* To use the best architecture for the Vector-Optimized Library of Kernels (VOLK) function, execute the following command:
-```
+To use the best architecture for the Vector-Optimized Library of Kernels (VOLK) function, execute the following command:
+```console
 $ volk_profile
 ```
 
-* Open the `gr-ieee802-15-4/examples/ieee802_15_4_CSS_PHY.grc` file with gnuradio-companion to generate and execute the flow graph in order to build the CSS PHY layer as an hierarchical block.
+Open the `gr-ieee802-15-4/examples/ieee802_15_4_CSS_PHY.grc` file with gnuradio-companion to generate and execute the flow graph in order to build the CSS PHY layer as an hierarchical block.
 
-* Open the `gr-ieee802-15-4/examples/ieee802_15_4_OQPSK_PHY.grc` file with gnuradio-companion to generate and execute the flow graph in order to build the O-QPSK PHY layer as an hierarchical block.
+Open the `gr-ieee802-15-4/examples/ieee802_15_4_OQPSK_PHY.grc` file with gnuradio-companion to generate and execute the flow graph in order to build the O-QPSK PHY layer as an hierarchical block.
 
-* Open the `gr-ieee802-15-4/examples/transceiver_CSS_loopback.grc` file to test the installation without any additional hardware by generating and executing the flow graph.
+Open the `gr-ieee802-15-4/examples/transceiver_CSS_loopback.grc` file to test the installation without any additional hardware by generating and executing the flow graph.
 
-* Install Wireshark:
-```
+Install Wireshark:
+```console
 $ sudo apt update
 $ sudo apt install wireshark
 ```
 
-* Connect to the USRP using its Ethernet profile.
+Connect to the USRP using its Ethernet profile.
 
-* Connect appropriate antennas to the USRP, open the `gr-ieee802-15-4/examples/transceiver_OQPSK.grc` file, and do the following:
-	* Simply generating and executing the flow graph should work because initially it uses the loopback interface.
-	* Disable the `Packet Pad` block.
-	* Enable the `UHD: USRP Source` block.
-	* Set `Ch0: Enable DC Offset Correction` and `Ch0: Enable IQ Imbalance Correction` in `UHD: USRP Source`->`Properties`->`FE Corrections` equal to `True`.
-	* Enable the `UHD: USRP Sink` block.
-	* Generating and executing the flow graph should still work.
-	* Enable the `Wireshark Connector` block.
-	* Enable the `File Sink` block.
-	* Generating and executing the flow graph should still work, which should generate the `/tmp/sensor.pcap` file that should contain captured packets with `Hello World!` payload.
-	* Disable the `Message Strobe` block.
-	* After generating and executing the flow graph, you should be able to capture packets from operational IEEE 802.15.4 networks by tuning to the appropriate channel.
-	* Delete the connection from `IEEE802.15.4 OQPSK PHY` to `QT GUI Frequency Sink`.
-	* Connect `UHD: USRP Source` to `QT GUI Frequency Sink`.
-	* By generating and executing the flow graph, you should be able to see the FFT of the Rx PHY interface.
-	* Disable the `QT GUI Frequency Sink`.
-	* Create a `QT GUI Waterfall Sink`, with `Bandwidth (Hz)` equal to `4e6`
-	* Connect `UHD: USRP Source` to `QT GUI Waterfall Sink`.
-	* Generating and executing the flow graph should now generate a spectrogram of the Rx PHY interface.
-	* Enable the `Socket PDU` block.
-	* Enable the `Packet Pad` block.
-	* Disable the `UHD: USRP Source` block.
-	* Try to transmit a simple message by generating and executing the flow graph, followed by the following commands:
-```
-$ python3
+Connect appropriate antennas to the USRP, open the `gr-ieee802-15-4/examples/transceiver_OQPSK.grc` file, and do the following:
+* Simply generating and executing the flow graph should work because initially it uses the loopback interface.
+* Disable the `Packet Pad` block.
+* Enable the `UHD: USRP Source` block.
+* Set `Ch0: Enable DC Offset Correction` and `Ch0: Enable IQ Imbalance Correction` in `UHD: USRP Source`>`Properties`>`FE Corrections` equal to `True`.
+* Enable the `UHD: USRP Sink` block.
+* Generating and executing the flow graph should still work.
+* Enable the `Wireshark Connector` block.
+* Enable the `File Sink` block.
+* Generating and executing the flow graph should still work, which should generate the `/tmp/sensor.pcap` file that should contain captured packets with `Hello World!` payload.
+* Disable the `Message Strobe` block.
+* After generating and executing the flow graph, you should be able to capture packets from operational IEEE 802.15.4 networks by tuning to the appropriate channel.
+* Delete the connection from `IEEE802.15.4 OQPSK PHY` to `QT GUI Frequency Sink`.
+* Connect `UHD: USRP Source` to `QT GUI Frequency Sink`.
+* By generating and executing the flow graph, you should be able to see the FFT of the Rx PHY interface.
+* Disable the `QT GUI Frequency Sink`.
+* Create a `QT GUI Waterfall Sink`, with `Bandwidth (Hz)` equal to `4e6`
+* Connect `UHD: USRP Source` to `QT GUI Waterfall Sink`.
+* Generating and executing the flow graph should now generate a spectrogram of the Rx PHY interface.
+* Enable the `Socket PDU` block.
+* Enable the `Packet Pad` block.
+* Disable the `UHD: USRP Source` block.
+* Try to transmit a simple message by generating and executing the flow graph, followed by executing `$ python3` to enter the following commands in an interactive Python 3 session:
+```pycon
 >>> import socket
 >>> sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 >>> message = "Hello World!"
@@ -261,26 +260,25 @@ $ python3
 >>> exit()
 ```
 
-* Terminate the execution of the flow graph and then do the following:
-	* The generated `/tmp/sensor.pcap` file should contain a packet with "Hello World!" in its payload after executing the above commands.
-	* An independent IEEE 802.15.4 sniffer should have also been able to capture the packet after tuning to the appropriate channel.
+Terminate the execution of the flow graph and then do the following:
+* The generated `/tmp/sensor.pcap` file should contain a packet with "Hello World!" in its payload after executing the above commands.
+* An independent IEEE 802.15.4 sniffer should have also been able to capture the packet after tuning to the appropriate channel.
 
-* Disconnect from the USRP and restore the connection profile.
+Disconnect from the USRP and restore the connection profile.
 
-* Install the latest version of Scapy:
-```
+Install the latest version of Scapy:
+```console
 $ sudo apt update
 $ sudo apt install python3-pip
 $ sudo pip3 install scapy
 ```
 
-* Reconnect to the USRP with its Ethernet profile, reopen the modified `gr-ieee802-15-4/examples/transceiver_OQPSK.grc` file, and do the following:
-	* Disable the `RIME Stack` block.
-	* Disable the `IEEE802.15.4 MAC` block.
-	* Connect `Socket PDU` to `IEEE802.15.4 OQPSK PHY`.
-	* Try to transmit an IEEE 802.15.4 packet using Scapy (v2.4.2+) by generating and executing the flow graph, followed by the following commands:
-```
-$ python3
+Reconnect to the USRP with its Ethernet profile, reopen the modified `gr-ieee802-15-4/examples/transceiver_OQPSK.grc` file, and do the following:
+* Disable the `RIME Stack` block.
+* Disable the `IEEE802.15.4 MAC` block.
+* Connect `Socket PDU` to `IEEE802.15.4 OQPSK PHY`.
+* Try to transmit an IEEE 802.15.4 packet using Scapy (v2.4.2+) by generating and executing the flow graph, followed by executing `$ python3` to enter the following commands in an interactive Python 3 session:
+```pycon
 >>> import socket
 >>> from scapy.all import *
 >>> sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -289,11 +287,10 @@ $ python3
 >>> exit()
 ```
 
-* Terminate the execution of the flow graph and then do the following:
-	* An independent IEEE 802.15.4 sniffer should have been able to capture the packet after tuning to the appropriate channel.
-	* Try to transmit a Zigbee packet using Scapy (v2.4.2+) by generating and executing the flow graph, followed by the following commands:
-```
-$ python3
+Terminate the execution of the flow graph and then do the following:
+* An independent IEEE 802.15.4 sniffer should have been able to capture the packet after tuning to the appropriate channel.
+* Try to transmit a Zigbee packet using Scapy (v2.4.2+) by generating and executing the flow graph, followed by executing `$ python3` to enter the following commands in an interactive Python 3 session:
+```pycon
 >>> import socket
 >>> from scapy.all import *
 >>> sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -302,18 +299,19 @@ $ python3
 >>> exit()
 ```
 
-* Terminate the execution of the flow graph and then do the following:
-	* An independent IEEE 802.15.4 sniffer should have been able to capture the packet after tuning to the appropriate channel.
-	* To turn the flow graph into a simple IEEE 802.15.4 sniffer, enable the `UHD: USRP Source` and disable the `Packet Pad` and `Socket PDU` blocks.
+Terminate the execution of the flow graph and then do the following:
+* An independent IEEE 802.15.4 sniffer should have been able to capture the packet after tuning to the appropriate channel.
+* To turn the flow graph into a simple IEEE 802.15.4 sniffer, enable the `UHD: USRP Source` and disable the `Packet Pad` and `Socket PDU` blocks.
 
-* If you were able to follow these instructions without any errors, then you should be able to generate and execute the flow graphs of this repository.
+If you were able to follow these instructions without any errors, then you should be able to generate and execute the flow graphs of this repository.
 
 
-## Publication
+## Publications
 
-These GRC flow graphs were used in the following publication:
+These GRC flow graphs were used in the following publications:
 
-* D.-G. Akestoridis, M. Harishankar, M. Weber, and P. Tague, "Zigator: Analyzing the security of Zigbee-enabled smart homes," in _Proceedings of the 13th ACM Conference on Security and Privacy in Wireless and Mobile Networks (WiSec)_, 2020, pp. 77--88. DOI: [10.1145/3395351.3399363](https://doi.org/10.1145/3395351.3399363).
+* D.-G. Akestoridis and P. Tague, “HiveGuard: A network security monitoring architecture for Zigbee networks,” to appear in Proc. IEEE CNS’21.
+* D.-G. Akestoridis, M. Harishankar, M. Weber, and P. Tague, “Zigator: Analyzing the security of Zigbee-enabled smart homes,” in *Proc. ACM WiSec’20*, 2020, pp. 77–88, doi: [10.1145/3395351.3399363](https://doi.org/10.1145/3395351.3399363).
 
 
 ## License
