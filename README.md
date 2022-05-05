@@ -5,13 +5,10 @@ A collection of GNU Radio Companion flow graphs for the inspection of IEEE 802.1
 
 ## Description of the GRC flow graphs
 
-The following GRC flow graphs were developed on [Debian 10.3](https://cdimage.debian.org/mirror/cdimage/archive/10.3.0/amd64/iso-cd/) using [GNU Radio 3.7](https://github.com/gnuradio/gnuradio/tree/maint-3.7), with the [gr-foo](https://github.com/bastibl/gr-foo/tree/maint-3.7) and [gr-ieee802-15-4](https://github.com/bastibl/gr-ieee802-15-4/tree/maint-3.7) modules, and a [USRP N210](https://www.ettus.com/all-products/un210-kit/) with an [SBX daughterboard](https://www.ettus.com/all-products/sbx/).
-
-1. **ieee802154_transceiver.grc**: A simplified version of Bastian Bloessl's GRC flow graph for an IEEE 802.15.4 transceiver.
-
-2. **ieee802154_uhd_to_cf32.grc**: A simple GRC flow graph that captures I/Q samples from a USRP for offline analysis.
-
-3. **ieee802154_cf32_to_pcap.grc**: A simple GRC flow graph that demodulates previously captured I/Q samples.
+The following GNU Radio Companion (GRC) flow graphs were developed on [Debian 10.3](https://cdimage.debian.org/mirror/cdimage/archive/10.3.0/amd64/iso-cd/) using [GNU Radio 3.7](https://github.com/gnuradio/gnuradio/tree/maint-3.7), with the [gr-foo](https://github.com/bastibl/gr-foo/tree/maint-3.7) and [gr-ieee802-15-4](https://github.com/bastibl/gr-ieee802-15-4/tree/maint-3.7) modules, and a [USRP N210](https://www.ettus.com/all-products/un210-kit/) with an [SBX daughterboard](https://www.ettus.com/all-products/sbx/):
+* **ieee802154_transceiver.grc**: A simplified version of Bastian Bloessl's GRC flow graph for an IEEE 802.15.4 transceiver.
+* **ieee802154_uhd_to_cf32.grc**: A simple GRC flow graph that captures I/Q samples from a USRP for offline analysis.
+* **ieee802154_cf32_to_pcap.grc**: A simple GRC flow graph that demodulates previously captured I/Q samples.
 
 
 ## Instructions
@@ -306,12 +303,16 @@ Terminate the execution of the flow graph and then do the following:
 If you were able to follow these instructions without any errors, then you should be able to generate and execute the flow graphs of this repository.
 
 
-## Publications
+## Related Publications
 
-These GRC flow graphs were used in the following publications:
-
-* D.-G. Akestoridis and P. Tague, “HiveGuard: A network security monitoring architecture for Zigbee networks,” to appear in Proc. IEEE CNS’21.
+* D.-G. Akestoridis, V. Sekar, and P. Tague, “On the security of Thread networks: Experimentation with OpenThread-enabled devices,” to appear in Proc. ACM WiSec’22.
+* D.-G. Akestoridis and P. Tague, “HiveGuard: A network security monitoring architecture for Zigbee networks,” in *Proc. IEEE CNS’21*, 2021, pp. 209–217, doi: [10.1109/CNS53000.2021.9705043](https://doi.org/10.1109/CNS53000.2021.9705043).
 * D.-G. Akestoridis, M. Harishankar, M. Weber, and P. Tague, “Zigator: Analyzing the security of Zigbee-enabled smart homes,” in *Proc. ACM WiSec’20*, 2020, pp. 77–88, doi: [10.1145/3395351.3399363](https://doi.org/10.1145/3395351.3399363).
+
+
+## Acknowledgments
+
+This project was supported in part by the Carnegie Mellon CyLab Security and Privacy Institute and in part by Carnegie Mellon University.
 
 
 ## License
